@@ -19,12 +19,15 @@ public class EnemyAI : MonoBehaviour
 
     Animator animator;
 
+    AudioSource myaudio;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         agent = this.GetComponent<NavMeshAgent>();
         animator= GetComponent<Animator>();
+        myaudio = GetComponent<AudioSource>();
     }
 
     private Vector3 RandomPosition()
@@ -98,4 +101,26 @@ public class EnemyAI : MonoBehaviour
         }
 
     }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.CompareTag("Bullet"))
+        {
+            // Disable all Renderers and Colliders
+            Renderer[] allRenderers = gameObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer c in allRenderers) c.enabled = false;
+            Collider[] allColliders = gameObject.GetComponentsInChildren<Collider>();
+            foreach (Collider c in allColliders) c.enabled = false;
+
+            StartCoroutine(PlayAndDestroy(myaudio.clip.length));
+
+        }
+    }
+    private IEnumerator PlayAndDestroy(float waitTime)
+    {
+        myaudio.Play();
+        yield return new WaitForSeconds(waitTime);
+        Destroy(gameObject);
+    }
+
 }
