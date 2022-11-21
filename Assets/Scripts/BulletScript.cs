@@ -16,10 +16,13 @@ public class BulletScript : MonoBehaviour
 
     AudioSource myaudio;
 
+    private ParticleSystem gunEffect;
+
     // Start is called before the first frame update
     void Start()
     {
         myaudio = GetComponent<AudioSource>();
+        gunEffect = gameObject.GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -36,6 +39,7 @@ public class BulletScript : MonoBehaviour
             //add force to shoot
             currentBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce);
             myaudio.Play();
+            gunEffect.Play();
 
             //Destroy it after a certain time
             Destroy(currentBullet, destroyTime);
